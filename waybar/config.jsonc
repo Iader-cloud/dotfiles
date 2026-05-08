@@ -1,0 +1,42 @@
+{
+    "layer": "top",
+    "position": "top",
+    "margin-top": 8,
+    "height": 38,
+    "spacing": 6,
+
+    "modules-left": ["wlr/taskbar"],
+    "modules-center": ["clock"],
+    "modules-right": ["network", "pulseaudio", "custom/logout", "custom/power"],
+
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 20,
+        "on-click": "activate"
+    },
+
+    "clock": {
+        "format": "  {:%I:%M %p - %A %d de %B}",
+        "locale": "es_CO.UTF-8",
+        "tooltip-format": "<big>{:%Y %B}</big>
+<tt><small>{calendar}</small></tt>"
+    },
+
+    "network": {
+        "format-wifi": "  {signalStrength}%",
+        "format-ethernet": "󰈀  eth",
+        "format-disconnected": "󰖪  sin red"
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 mudo",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "custom/logout": { "format": "󰍃", "on-click": "hyprctl dispatch exit" },
+    "custom/power": { "format": "⏻", "on-click": "systemctl poweroff" }
+}
