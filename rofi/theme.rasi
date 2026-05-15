@@ -1,0 +1,47 @@
+* {
+    font: "JetBrainsMono Nerd Font 12";
+
+    bg: #0f1117ee;
+    bg2: #1a1f2bee;
+    fg: #cdd6f4;
+    accent: #89b4fa;
+    urgent: #f38ba8;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 38%;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 20px;
+    background-color: @bg;
+}
+
+inputbar {
+    background-color: @bg2;
+    border-radius: 14px;
+    padding: 12px;
+    margin: 14px;
+}
+
+entry {
+    placeholder: "Search anime vibes...";
+}
+
+listview {
+    lines: 8;
+    spacing: 8px;
+    padding: 10px;
+}
+
+element {
+    padding: 12px;
+    border-radius: 14px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #11111b;
+}
