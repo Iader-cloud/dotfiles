@@ -1,42 +1,147 @@
-{
+[
+  // ══════════════════════════════════════════════════════════
+  //  BARRA PRINCIPAL — 3 islas visuales (izq / centro / der)
+  //  Auto-hide via SIGUSR1  |  SUPER+B = toggle manual
+  // ══════════════════════════════════════════════════════════
+  {
+    "name": "main",
     "layer": "top",
     "position": "top",
+    "height": 32,
     "margin-top": 8,
-    "height": 38,
-    "spacing": 6,
+    "margin-left": 12,
+    "margin-right": 12,
+    "margin-bottom": 0,
+    "exclusive-zone": -1,
+    "fixed-center": true,
+    "spacing": 0,
+    "ipc": true,
 
-    "modules-left": ["wlr/taskbar"],
-    "modules-center": ["clock"],
-    "modules-right": ["network", "pulseaudio", "custom/logout", "custom/power"],
+    "modules-left":   ["hyprland/workspaces"],
+    "modules-center": ["custom/cava-left", "custom/playerctl", "custom/cava-right"],
+    "modules-right":  ["custom/weather", "network", "pulseaudio", "memory", "cpu", "clock"],
 
-    "wlr/taskbar": {
-        "format": "{icon}",
-        "icon-size": 20,
-        "on-click": "activate"
+    // ── ISLA IZQ: Workspaces ──────────────────────────────
+    "hyprland/workspaces": {
+      "format": "{icon}",
+      "format-icons": {
+        "active":  "●",
+        "default": "○",
+        "urgent":  "◉"
+      },
+      "on-click": "activate",
+      "sort-by-number": true,
+      "show-special": false
     },
 
-    "clock": {
-        "format": "  {:%I:%M %p - %A %d de %B}",
-        "locale": "es_CO.UTF-8",
-        "tooltip-format": "<big>{:%Y %B}</big>
-<tt><small>{calendar}</small></tt>"
+    // ── ISLA CENTRO: Cava izquierda ────────────────────────
+    "custom/cava-left": {
+      "exec": "$HOME/.config/waybar/scripts/cava.sh left",
+      "format": "{}",
+      "interval": "once",
+      "tooltip": false
     },
 
+    // ── ISLA CENTRO: Player ───────────────────────────────
+    "custom/playerctl": {
+      "exec": "$HOME/.config/waybar/scripts/spotify.sh",
+      "return-type": "json",
+      "interval": 2,
+      "on-click":       "playerctl --player=spotify play-pause",
+      "on-scroll-up":   "playerctl --player=spotify next",
+      "on-scroll-down": "playerctl --player=spotify previous"
+    },
+
+    // ── ISLA CENTRO: Cava derecha ─────────────────────────
+    "custom/cava-right": {
+      "exec": "$HOME/.config/waybar/scripts/cava.sh right",
+      "format": "{}",
+      "interval": "once",
+      "tooltip": false
+    },
+
+    // ── ISLA DER: Clima ───────────────────────────────────
+    "custom/weather": {
+      "exec": "curl -sf 'https://wttr.in/?format=%c%t' | tr -d '+'",
+      "interval": 3600,
+      "tooltip": false
+    },
+
+    // ── ISLA DER: Red ─────────────────────────────────────
     "network": {
-        "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "󰈀  eth",
-        "format-disconnected": "󰖪  sin red"
+      "format-wifi":        "󰤨",
+      "format-ethernet":    "󰈀",
+      "format-disconnected":"󰤭",
+      "tooltip-format-wifi":      "{essid}  {signalStrength}%\n{ipaddr}",
+      "tooltip-format-ethernet":  "{ifname} — {ipaddr}",
+      "tooltip-format-disconnected": "Sin conexión"
     },
 
+    // ── ISLA DER: Volumen ─────────────────────────────────
     "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": "󰝟 mudo",
-        "format-icons": {
-            "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol"
+      "format": "{icon}",
+      "format-muted": "󰝟",
+      "format-icons": {
+        "default": ["󰕿", "󰖀", "󰕾"]
+      },
+      "on-click": "pavucontrol",
+      "tooltip-format": "Volumen: {volume}%\n{desc}"
     },
 
-    "custom/logout": { "format": "󰍃", "on-click": "hyprctl dispatch exit" },
-    "custom/power": { "format": "⏻", "on-click": "systemctl poweroff" }
-}
+    // ── ISLA DER: RAM ─────────────────────────────────────
+    "memory": {
+      "interval": 5,
+      "format": "󰍛",
+      "tooltip-format": "RAM  {used:0.1f}G / {total:0.1f}G  ({percentage}%)",
+      "states": {
+        "warning":  80,
+        "critical": 95
+      }
+    },
+
+    // ── ISLA DER: CPU ─────────────────────────────────────
+    "cpu": {
+      "interval": 3,
+      "format": "󰻠",
+      "tooltip-format": "CPU  {usage}% | Load: {load}",
+      "states": {
+        "warning":  70,
+        "critical": 90
+      }
+    },
+
+    // ── ISLA DER: Reloj ───────────────────────────────────
+    "clock": {
+      "format": "  {:%Y-%m-%d    %I:%M %p}",
+      "tooltip-format": "<big>{:%B %Y}</big>\n<tt><small>{calendar}</small></tt>"
+    }
+  },
+
+  // ══════════════════════════════════════════════════════════
+  //  ISLA DINÁMICA — Solo aparece cuando Spotify reproduce
+  //  Posición: después del workspace island (ajusta margin-left
+  //  si tu isla de workspaces es más ancha/estrecha)
+  // ══════════════════════════════════════════════════════════
+  {
+    "name": "spotify-island",
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "margin-top": 8,
+    "margin-left": 175,
+    "margin-right": 0,
+    "exclusive-zone": -1,
+    "ipc": true,
+
+    "modules-left":   ["custom/spotify-track"],
+    "modules-center": [],
+    "modules-right":  [],
+
+    "custom/spotify-track": {
+      "exec": "$HOME/.config/waybar/scripts/spotify_track.sh",
+      "return-type": "json",
+      "interval": 3,
+      "on-click": "playerctl --player=spotify play-pause"
+    }
+  }
+]

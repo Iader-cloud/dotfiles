@@ -368,3 +368,4 @@ hl.window_rule({
 -- Usamos mainMod (SUPER) + G para iniciar/detener la grabación
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("pkill -SIGINT wf-recorder || wf-recorder --audio='alsa_output.pci-0000_00_14.2.analog-stereo.monitor' -f ~/Videos/Grabacion_$(date +%d-%m-%Y_%H-%M-%S).mp4"))
 hl.env("HYPRLAND_NO_DIRECT_SCANOUT", "1")
+
